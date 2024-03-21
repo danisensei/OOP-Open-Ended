@@ -24,7 +24,7 @@ void displayFooter() {
     cout << "----------------------------------------------" << endl;
 }
 
-void addTeacher(vector<Teachers>& teachers) {
+void addTeacher(vector<Teacher>& teachers) {
     string id, name, email;
     cout << "Enter Teacher ID: ";
     cin >> id;
@@ -33,12 +33,12 @@ void addTeacher(vector<Teachers>& teachers) {
     getline(cin, name);
     cout << "Enter Teacher Email: ";
     cin >> email;
-    Teachers newTeacher(id, name, email);
+    Teacher newTeacher(id, name, email);
     teachers.push_back(newTeacher);
     cout << "Teacher added successfully!" << endl;
 }
 
-void addStudent(vector<Students>& students) {
+void addStudent(vector<Student>& students) {
     string id, name, email;
     cout << "Enter Student ID: ";
     cin >> id;
@@ -47,12 +47,12 @@ void addStudent(vector<Students>& students) {
     getline(cin, name);
     cout << "Enter Student Email: ";
     cin >> email;
-    Students newStudent(id, name, email);
+    Student newStudent(id, name, email);
     students.push_back(newStudent);
     cout << "Student added successfully!" << endl;
 }
 
-void addCourse(vector<Course>& courses, const vector<Teachers>& teachers) {
+void addCourse(vector<Course>& courses, const vector<Teacher>& teachers) {
     int code;
     string name;
     string teacherID;
@@ -64,7 +64,7 @@ void addCourse(vector<Course>& courses, const vector<Teachers>& teachers) {
     cout << "Enter Teacher ID for the Course: ";
     cin >> teacherID;
 
-    auto it = find_if(teachers.begin(), teachers.end(), [teacherID](const Teachers& t) {
+    auto it = find_if(teachers.begin(), teachers.end(), [teacherID](const Teacher& t) {
         return t.getTeacherID() == teacherID;
     });
 
@@ -77,7 +77,7 @@ void addCourse(vector<Course>& courses, const vector<Teachers>& teachers) {
     }
 }
 
-void enrollStudent(vector<Students>& students, const vector<Course>& courses) {
+void enrollStudent(vector<Student>& students, const vector<Course>& courses) {
     string studentID;
     int courseCode;
     cout << "Enter Student ID: ";
@@ -85,7 +85,7 @@ void enrollStudent(vector<Students>& students, const vector<Course>& courses) {
     cout << "Enter Course Code to Enroll: ";
     cin >> courseCode;
 
-    auto studentIt = find_if(students.begin(), students.end(), [studentID](const Students& s) {
+    auto studentIt = find_if(students.begin(), students.end(), [studentID](const Student& s) {
         return s.getstudentID() == studentID;
     });
 
@@ -106,8 +106,8 @@ void enrollStudent(vector<Students>& students, const vector<Course>& courses) {
 }
 
 int main() {
-    vector<Teachers> teachers;
-    vector<Students> students;
+    vector<Teacher> teachers;
+    vector<Student> students;
     vector<Course> courses;
 
     int choice;

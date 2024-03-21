@@ -1,65 +1,41 @@
 #pragma once
 
 #include<iostream>
+#include<string>
 #include<vector>
-#include<Course.h>
+
 
 using namespace std;
 
+class Course;
 class Teacher
 {
-    private:
+  private:
         string name;
         string email;
         string teacherID;
         vector<Course> coursestaught;
   
-    public:
-        Teacher(string id,string n, string mail) : teacherID(id), name(n), email(mail) {}
+  public:
+        Teacher(string id,string n, string mail);
 
-  void assignCourse (Course course) {
-    coursestaught.push_back(course);
-  }
+   //Main Methods To ADD
+  void assignCourse (Course course) {}
 
-  void removeCourse (Course course) {
-    coursestaught.erase(find(coursestaught.begin(), coursestaught.end(), course));
-  }
+  void removeCourse (Course course) {}
 
-  void viewCourses() {
-    for (int i = 0; i < coursestaught.size(); i++) {
-      displayCourses(coursestaught[i]);
-    }
-  } 
+  void viewCourses() {}
 
-  void displayCourses(Course course) {
-    cout << "\nCourses Assigned to the Teacher;" << endl;
-    int i = 1;
-    for (const auto &course : coursestaught)
-    {
-        cout << "Course #" << i << ":" << endl;
-        cout << "Course ID: " << course.getCourseCode() << endl;
-        cout << "Course Name: " << course.getCourseName() << endl;
-        cout << "Course Teacher: "; course.displayTeacher(course.getTeacher()); cout << "\n";
-        cout << "Course Enrolled Student: "; course.viewStudents(); cout << "\n";
-        i++;
+//________________________________________________________________????????
 
-    }
-
-  }
-
-
+//Additional Course Methods
+    
   
-  string getTeacherName() const{
-    return name;
-  }
+  string getTeacherName() const{}
 
-  string getTeacherEmail() const{
-    return email;
-  }
+  string getTeacherEmail() const{}
 
-  string getTeacherID() const{
-    return teacherID;
-  }
+  string getTeacherID() const{}
 
 
 };

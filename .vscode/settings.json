@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "*.wmls": "javascriptlite",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "vector": "cpp",
+        "iostream": "cpp",
+        "xutility": "cpp"
     }
 }

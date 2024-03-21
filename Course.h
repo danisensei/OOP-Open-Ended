@@ -45,6 +45,9 @@ public:
     }
 //________________________________________________________________????????
 
+    void writeToFile(const string& filename) const {}
+    void readFromFile(const string& filename, const vector<Student>& allStudents) {}
+
 //Additional Course Methods
     
     

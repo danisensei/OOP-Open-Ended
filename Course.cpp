@@ -1,7 +1,12 @@
 #include<Course.h>
 
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+
 #include<Teachers.h>
 #include<Students.h>
 
@@ -58,4 +63,63 @@ void Course::displayTeacher(const Teacher &cteacher) const
     cout << "Teacher Name: " << cteacher.getTeacherName() << endl;
     cout << "Teacher ID: " << cteacher.getTeacherID() << endl;
     cout << "Teacher Email: " << cteacher.getTeacherEmail() << endl;
+}
+
+
+void Course::writeToFile(const string& filename) const {
+    ofstream file(filename);
+    if (file.is_open()) {
+        file << courseCode << "," << courseName << "," << teacher.getTeacherID() << "\n";
+        for (const auto& student : studentsEnrolled) {
+            file << student.getstudentID() << "," << student.getstudentName() << "," << student.getstudentEmail() << "\n";
+        }
+        file.close();
+    } else {
+        cerr << "Error: Unable to open file for writing\n";
+    }   
+}
+
+void Course::readFromFile(const string& filename, const vector<Student>& allStudents) {
+    ifstream file(filename);
+    if (file.is_open()) {
+        string line;
+        if (getline(file, line)) {
+            stringstream ss(line);
+            string courseID;
+            getline(ss, courseID, ',');
+            getline(ss, courseName, ',');
+            string teacherID;
+            vector<Teacher> allTeachers; 
+
+            getline(ss, teacherID, ',');
+
+
+            auto it = find_if(allTeachers.begin(), allTeachers.end(), [teacherID](const Teacher& t) {
+                return t.getTeacherID() == teacherID;
+            });
+            if (it != allTeachers.end()) {
+                teacher = *it;
+            }
+
+            
+            while (getline(file, line)) {
+                stringstream ss(line);
+                string studentID, studentName, studentEmail;
+                getline(ss, studentID, ',');
+                getline(ss, studentName, ',');
+                getline(ss, studentEmail, ',');
+
+               
+                auto it = find_if(allStudents.begin(), allStudents.end(), [studentID](const Student& s) {
+                    return s.getstudentID() == studentID;
+                });
+                if (it != allStudents.end()) {
+                    studentsEnrolled.push_back(*it);
+                }
+            }
+        }
+        file.close();
+    } else {
+        cerr << "Error: Unable to open file for reading\n";
+    }
 }

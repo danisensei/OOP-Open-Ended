@@ -1,4 +1,4 @@
-#pragma once
+#pragma once  //they should cancel the name "pragma"
 
 #include<iostream>
 #include<vector>

@@ -1,5 +1,8 @@
+#pragma once
+
 #include<iostream>
 #include<vector>
+#include<Course.h>
 
 using namespace std;
 
@@ -9,14 +12,38 @@ class Teacher
         string name;
         string email;
         string teacherID;
-        vector<string> coursestaught;
+        vector<Course> coursestaught;
   
     public:
         Teacher(string id,string n, string mail) : teacherID(id), name(n), email(mail) {}
 
-  void assignCourse (string course) {}
-  void removeCourse (string course) {}
-  void viewCourses() {} 
+  void assignCourse (Course course) {
+    coursestaught.push_back(course);
+  }
+  void removeCourse (Course course) {
+    for (int i = 0; i < coursestaught.size(); i++) {
+      if (coursestaught[i] == course) {
+        coursestaught.erase(coursestaught.begin() + i);
+        break;
+      }
+    }
+  }
+  void viewCourses() {
+    for (int i = 0; i < coursestaught.size(); i++) {
+      displayCourses(coursestaught[i]);
+    }
+  } 
+
+  void displayCourses(Course course) {
+    cout << "\nCourses Assigned to the Teacher;" << endl;
+    for (int i = 0; i < coursestaught.size(); i++)
+    {
+        cout << "Course #" << i+1 << ":" << endl;
+        cout << "";
+
+    }
+
+  }
 
 
 };

@@ -1,5 +1,8 @@
+#pragma once
+
 #include<iostream>
 #include<vector>
+#include<Course.h>
 
 using namespace std;
 
@@ -9,13 +12,13 @@ class Student
     string studentID;
     string name;
     string email;
-    vector<string> coursesEnrolled;
+    vector<Course> coursesEnrolled;
 
     public:
-        Student(string id, string n, string mail) : studentID(id), name(n), email(mail) {}
+    Student(string id, string n, string mail) : studentID(id), name(n), email(mail) {}
 
-    void enrollaCourse(string course){}
-    void dropaCourse(string course) {}
+    void enrollCourse(Course course){}
+    void dropCourse(Course course) {}
     void viewCourses() {
         
     }

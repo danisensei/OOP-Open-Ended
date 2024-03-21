@@ -35,7 +35,12 @@ void Student::viewCourses() {
 //________________________________________________________________????????
 
 
-void Student::writeToFile(const string& filename) const {
+/**
+ * Writes the student's information to a file.
+ * 
+ * @param filename The name of the file to write to.
+ */
+void Student::writeToFile(const string& filename) const{
     ofstream file(filename);
     if (file.is_open()) {
         file << studentID << "," << name << "," << email << "\n";
@@ -96,3 +101,6 @@ string Student::getstudentEmail() const {
     return email;
 }
 
+vector<Course> Student::getCourse(){
+    return coursesEnrolled;
+}

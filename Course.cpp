@@ -123,3 +123,9 @@ void Course::readFromFile(const string& filename, const vector<Student>& allStud
         cerr << "Error: Unable to open file for reading\n";
     }
 }
+
+
+vector<Student> Course::getStudentsEnrolled()
+{
+    return studentsEnrolled;
+}

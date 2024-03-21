@@ -110,6 +110,18 @@ int main() {
     vector<Student> students;
     vector<Course> courses;
 
+    for (auto& teacher : teachers) {
+        teacher.readFromFile("teacher.txt", teacher.getCourse());
+    }
+
+    for (auto& student : students) {
+        student.readFromFile("student.txt", student.getCourse());
+    }
+
+    for (auto& course : courses) {
+        course.readFromFile("course.txt", course.getStudentsEnrolled());
+    }
+
     int choice;
     do {
         displayHeader("MAIN MENU");
@@ -143,6 +155,18 @@ int main() {
 
         displayFooter();
     } while (choice != 5);
+
+    for (const auto& student : students) {
+        student.writeToFile("student.txt");
+    }
+
+    for (const auto& teacher : teachers) {
+        teacher.writeToFile("teacher.txt");
+    }
+
+    for (const auto& course : courses) {
+        course.writeToFile("course.txt");
+    }
 
     return 0;
 }

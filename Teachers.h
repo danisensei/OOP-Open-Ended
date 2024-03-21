@@ -40,5 +40,5 @@ class Teacher
 
   string getTeacherID() const{}
 
-
+  vector<Course> getCourse(){}
 };

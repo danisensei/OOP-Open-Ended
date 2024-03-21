@@ -101,3 +101,7 @@ return email;
 string Teacher::getTeacherID() const{
 return teacherID;
 }
+
+vector<Course> Teacher::getCourse(){
+    return coursestaught;
+}

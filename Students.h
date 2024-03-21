@@ -25,12 +25,14 @@ class Student
 
 //________________________________________________________________????????
 
-    void writeToFile(const string& filename) const {}
+    void writeToFile(const string& filename) const{}
     void readFromFile(const string& filename, const vector<Course>& allCourses) {}
 //Additional Course Methods
     
     string getstudentName() const {}
     string getstudentID() const {}
     string getstudentEmail() const {}
+
+    vector<Course> getCourse(){}
   
 };

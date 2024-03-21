@@ -22,7 +22,7 @@ class Teacher
   }
   void removeCourse (Course course) {
     for (int i = 0; i < coursestaught.size(); i++) {
-      if (coursestaught[i] == course) {
+      if (coursestaught[i].getCourseCode() == course.getCourseCode()) {
         coursestaught.erase(coursestaught.begin() + i);
         break;
       }

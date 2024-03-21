@@ -1,12 +1,13 @@
+#include "Course.h"
+#include "Teachers.h"
+#include "Students.h"
+
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <algorithm>
-#include "Course.h"
-#include "Teachers.h"
-#include "Students.h"
 
 using namespace std;
 
@@ -111,15 +112,15 @@ int main() {
     vector<Course> courses;
 
     for (auto& teacher : teachers) {
-        teacher.readFromFile("teacher.txt", courses);
+        teacher.readFromFile("teacher.txt", teacher.getCourse());
     }
 
     for (auto& student : students) {
-        student.readFromFile("student.txt", courses);
+        student.readFromFile("student.txt", student.getCourse());
     }
 
     for (auto& course : courses) {
-        course.readFromFile("course.txt", students);
+        course.readFromFile("course.txt", course.getStudentsEnrolled());
     }
 
     int choice;

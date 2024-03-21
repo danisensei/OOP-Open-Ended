@@ -4,8 +4,8 @@
 #include<vector>
 #include<fstream>
 #include<algorithm>
-#include<Teachers.h>
-#include<Students.h>
+#include"Teachers.h"
+#include"Students.h"
 
 using namespace std;
 

@@ -4,9 +4,9 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
-#include <Course.h>
-#include <Teachers.h>
-#include <Students.h>
+#include "Course.h"
+#include "Teachers.h"
+#include "Students.h"
 
 using namespace std;
 
@@ -111,15 +111,15 @@ int main() {
     vector<Course> courses;
 
     for (auto& teacher : teachers) {
-        teacher.readFromFile("teacher.txt", teacher.getCourse());
+        teacher.readFromFile("teacher.txt", courses);
     }
 
     for (auto& student : students) {
-        student.readFromFile("student.txt", student.getCourse());
+        student.readFromFile("student.txt", courses);
     }
 
     for (auto& course : courses) {
-        course.readFromFile("course.txt", course.getStudentsEnrolled());
+        course.readFromFile("course.txt", students);
     }
 
     int choice;

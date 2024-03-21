@@ -1,32 +1,18 @@
-#include<Course.h>
+#include "Course.h"
 
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <algorithm>
+Course::Course() {}
 
-#include<Teachers.h>
-#include<Students.h>
+Course::Course(int ID, string name, Teacher t) : courseCode(ID), courseName(name), teacher(t) {}
 
-using namespace std;
-
-Course::Course(int ID, string name, Teacher t) : courseCode(ID), courseName(name), teacher(t) {};
-
-//Main Methods To ADD
-void Course::addStudent(Student & student)
-{
+void Course::addStudent(Student & student) {
     studentsEnrolled.push_back(student);
 }
 
-void Course::removeStudent(Student & student)
-{
+void Course::removeStudent(Student & student) {
     studentsEnrolled.erase(find(studentsEnrolled.begin(), studentsEnrolled.end(), student));
 }
 
-void Course::viewStudents() const
-{
+void Course::viewStudents() const {
     cout << "Students Enrolled in the Course:" << endl;
     int i = 1;
     for (const auto &student : studentsEnrolled)
@@ -38,33 +24,6 @@ void Course::viewStudents() const
         i++;
     }
 }
-//________________________________________________________________????????
-
-//Additional Course Methods
-
-
-int Course::getCourseCode() const
-{
-    return courseCode;
-}
-
-string Course::getCourseName() const
-{
-    return courseName;
-}
-
-Teacher Course::getTeacher() const
-{
-    return teacher;
-}
-
-void Course::displayTeacher(const Teacher &cteacher) const
-{
-    cout << "Teacher Name: " << cteacher.getTeacherName() << endl;
-    cout << "Teacher ID: " << cteacher.getTeacherID() << endl;
-    cout << "Teacher Email: " << cteacher.getTeacherEmail() << endl;
-}
-
 
 void Course::writeToFile(const string& filename) const {
     ofstream file(filename);
@@ -124,8 +83,24 @@ void Course::readFromFile(const string& filename, const vector<Student>& allStud
     }
 }
 
+int Course::getCourseCode() const {
+    return courseCode;
+}
 
-vector<Student> Course::getStudentsEnrolled()
-{
+string Course::getCourseName() const {
+    return courseName;
+}
+
+Teacher Course::getTeacher() const {
+    return teacher;
+}
+
+void Course::displayTeacher(const Teacher &cteacher) const {
+    cout << "Teacher Name: " << cteacher.getTeacherName() << endl;
+    cout << "Teacher ID: " << cteacher.getTeacherID() << endl;
+    cout << "Teacher Email: " << cteacher.getTeacherEmail() << endl;
+}
+
+vector<Student> Course::getStudentsEnrolled() {
     return studentsEnrolled;
 }

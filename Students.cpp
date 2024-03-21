@@ -1,22 +1,15 @@
-#include<Students.h>
+#include "Students.h"
 
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <algorithm>
-
-#include "Course.h"
-
-using namespace std;
+Student::Student(string id, string n, string mail) : studentID(id), name(n), email(mail) {}
 
 void Student::enrollCourse(Course course) {
     coursesEnrolled.push_back(course);
 }
+
 void Student::dropCourse(Course course) {
     coursesEnrolled.erase(find(coursesEnrolled.begin(), coursesEnrolled.end(), course));
 }
+
 void Student::viewCourses() {
     cout << "\nCourses Assigned to the Student " << name << ";" << endl;
     int i = 1;
@@ -27,20 +20,10 @@ void Student::viewCourses() {
         cout << "Course Name: " << course.getCourseName() << endl;
         cout << "Course Teacher: "; course.displayTeacher(course.getTeacher()); cout << "\n";
         i++;
-
     }
+}
 
-} 
-
-//________________________________________________________________????????
-
-
-/**
- * Writes the student's information to a file.
- * 
- * @param filename The name of the file to write to.
- */
-void Student::writeToFile(const string& filename) const{
+void Student::writeToFile(const string& filename) const {
     ofstream file(filename);
     if (file.is_open()) {
         file << studentID << "," << name << "," << email << "\n";
@@ -63,15 +46,12 @@ void Student::readFromFile(const string& filename, const vector<Course>& allCour
             getline(ss, name, ',');
             getline(ss, email, ',');
 
-            // Read enrolled courses
             while (getline(file, line)) {
                 stringstream ss(line);
                 string courseCode, courseName;
                 getline(ss, courseCode, ',');
                 getline(ss, courseName, ',');
 
-                // Find the course object corresponding to courseCode
-                // Assuming you have a vector of all courses available
                 auto it = find_if(allCourses.begin(), allCourses.end(), [courseCode](const Course& c) {
                     return c.getCourseCode() == stoi(courseCode);
                 });
@@ -86,11 +66,8 @@ void Student::readFromFile(const string& filename, const vector<Course>& allCour
     }
 }
 
-//Additional Course Methods
-
-
 string Student::getstudentName() const {
-        return name;
+    return name;
 }
 
 string Student::getstudentID() const {
@@ -101,6 +78,6 @@ string Student::getstudentEmail() const {
     return email;
 }
 
-vector<Course> Student::getCourse(){
+vector<Course> Student::getCourse() {
     return coursesEnrolled;
 }

@@ -20,14 +20,11 @@ class Teacher
   void assignCourse (Course course) {
     coursestaught.push_back(course);
   }
+
   void removeCourse (Course course) {
-    for (int i = 0; i < coursestaught.size(); i++) {
-      if (coursestaught[i].getCourseCode() == course.getCourseCode()) {
-        coursestaught.erase(coursestaught.begin() + i);
-        break;
-      }
-    }
+    coursestaught.erase(find(coursestaught.begin(), coursestaught.end(), course));
   }
+
   void viewCourses() {
     for (int i = 0; i < coursestaught.size(); i++) {
       displayCourses(coursestaught[i]);
@@ -36,13 +33,32 @@ class Teacher
 
   void displayCourses(Course course) {
     cout << "\nCourses Assigned to the Teacher;" << endl;
-    for (int i = 0; i < coursestaught.size(); i++)
+    int i = 1;
+    for (const auto &course : coursestaught)
     {
-        cout << "Course #" << i+1 << ":" << endl;
-        cout << "";
+        cout << "Course #" << i << ":" << endl;
+        cout << "Course ID: " << course.getCourseCode() << endl;
+        cout << "Course Name: " << course.getCourseName() << endl;
+        cout << "Course Teacher: "; course.displayTeacher(course.getTeacher()); cout << "\n";
+        cout << "Course Enrolled Student: "; course.viewStudents(); cout << "\n";
+        i++;
 
     }
 
+  }
+
+
+  
+  string getTeacherName() const{
+    return name;
+  }
+
+  string getTeacherEmail() const{
+    return email;
+  }
+
+  string getTeacherID() const{
+    return teacherID;
   }
 
 

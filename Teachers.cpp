@@ -1,5 +1,12 @@
 #include "Teachers.h"
 
+#include<iostream>
+#include<string>
+#include<vector>
+#include<fstream>
+#include<algorithm>
+#include"Course.h"
+
 Teacher::Teacher(string id, string n, string mail) : teacherID(id), name(n), email(mail) {}
 
 void Teacher::assignCourse(Course course) {

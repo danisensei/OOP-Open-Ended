@@ -4,10 +4,10 @@
 #include<vector>
 #include<fstream>
 #include<algorithm>
-#include"Course.h"
 
 using namespace std;
 
+class Course;
 class Student
 {
 private:

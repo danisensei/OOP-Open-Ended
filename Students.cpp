@@ -1,5 +1,11 @@
 #include "Students.h"
 
+#include<iostream>
+#include<vector>
+#include<fstream>
+#include<algorithm>
+#include"Course.h"
+
 Student::Student(string id, string n, string mail) : studentID(id), name(n), email(mail) {}
 
 void Student::enrollCourse(Course course) {

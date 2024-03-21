@@ -1,5 +1,12 @@
 #include "Course.h"
 
+#include<iostream>
+#include<vector>
+#include<fstream>
+#include<algorithm>
+#include"Teachers.h"
+#include"Students.h"
+
 Course::Course() {}
 
 Course::Course(int ID, string name, Teacher t) : courseCode(ID), courseName(name), teacher(t) {}

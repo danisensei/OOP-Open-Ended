@@ -114,6 +114,7 @@ int main() {
     for (auto& teacher : teachers) {
         teacher.readFromFile("teacher.txt", teacher.getCourse());
     }
+    
 
     for (auto& student : students) {
         student.readFromFile("student.txt", student.getCourse());

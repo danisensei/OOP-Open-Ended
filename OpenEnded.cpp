@@ -16,7 +16,9 @@ class Student
 
     void enrollaCourse(string course){}
     void dropaCourse(string course) {}
-    void viewCourses() {}
+    void viewCourses() {
+        
+    }
   
 };
 

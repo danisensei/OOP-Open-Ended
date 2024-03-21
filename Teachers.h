@@ -17,6 +17,7 @@ class Teacher
         vector<Course> coursestaught;
   
   public:
+        Teacher() {}
         Teacher(string id,string n, string mail);
 
    //Main Methods To ADD

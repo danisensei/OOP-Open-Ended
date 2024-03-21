@@ -17,6 +17,7 @@ private:
     vector<Student> studentsEnrolled; 
 
 public:
+    Course() {};
     Course(int ID, string name, Teacher t) : courseCode(ID), courseName(name), teacher(t) {};
 
     //Main Methods To ADD

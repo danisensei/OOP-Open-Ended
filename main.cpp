@@ -4,10 +4,10 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
-#include "Course.h"
-#include "Teacher.h"
-#include "Student.h"
-void displaySeparator();
+#include <Course.h>
+#include <Teachers.h>
+#include <Students.h>
+
 using namespace std;
 
 // function to display a separator line

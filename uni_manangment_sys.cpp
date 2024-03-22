@@ -120,9 +120,9 @@ public:
 // Implementations
 
 void loadData(vector<Teacher*>& teachers, vector<Student*>& students, vector<Course*>& courses) {
-    loadCourses(courses, teachers, students);
     loadTeachers(teachers, courses);
     loadStudents(students, courses);
+    loadCourses(courses, teachers, students);
 }
 
 void saveData(const vector<Teacher*>& teachers, const vector<Student*>& students, const vector<Course*>& courses) {
@@ -194,7 +194,7 @@ void loadStudents(vector<Student*>& students, vector<Course*>& courses) {
 }
 
 void saveCourses(const vector<Course*>& courses) {
-    ofstream file("courses.txt");
+    ofstream file("courses.txt", ios::app);
     if (!file.is_open()) {
         cerr << "Error: Unable to open courses file for writing." << endl;
         return;
@@ -223,10 +223,11 @@ void loadCourses(vector<Course*>& courses, const vector<Teacher*>& teachers, con
         stringstream ss(line);
         int code;
         string name;
-        int teacherID; // Change teacherID to teacherName
+        int teacherID;
         ss >> code;
         getline(ss, name, ',');
-        ss >> teacherID; // Read teacherName instead of teacherID
+        string id = to_string(teacherID);
+        getline(ss, id, ',');
 
         Teacher* teacher = nullptr;
         for (const auto& t : teachers) {

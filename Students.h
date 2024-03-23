@@ -1,35 +1,31 @@
-#pragma once
+#ifndef STUDENTS_H
+#define STUDENTS_H
 
-#include<iostream>
-#include<vector>
-#include<fstream>
-#include<algorithm>
+#include <string>
+#include <vector>
+#include <algorithm> 
+#include "Course.h"
 
-using namespace std;
+class Course; // Forward declaration
 
-class Course;
-class Student
-{
+class Student {
 private:
-    string studentID;
-    string name;
-    string email;
-    vector<Course> coursesEnrolled;
+    int studentID;
+    std::string name;
+    std::string email;
+    std::vector<Course*> coursesEnrolled;
 
 public:
-    Student() {}
-    Student(string id, string n, string mail);
+    Student(int id, std::string n, std::string mail);
 
-    void enrollCourse(Course course);
-    void dropCourse(Course course);
-    void viewCourses();
+    void enrollCourse(Course* course);
+    void dropCourse(Course* course);
+    void viewCourses() const;
 
-    void writeToFile(const string& filename) const;
-    void readFromFile(const string& filename, const vector<Course>& allCourses);
-
-    string getstudentName() const;
-    string getstudentID() const;
-    string getstudentEmail() const;
-
-    vector<Course> getCourse();
+    std::string getStudentName() const;
+    int getStudentID() const;
+    std::string getStudentEmail() const;
+    std::vector<Course*> getCourses() const;
 };
+
+#endif

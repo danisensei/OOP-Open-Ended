@@ -5,13 +5,12 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
+#include "Teachers.h"
+#include "Students.h"
+#include "Course.h"
 
 using namespace std;
 
-// Forward declarations
-class Teacher;
-class Student;
-class Course;
 
 // Function declarations
 void loadData(vector<Teacher*>& teachers, vector<Student*>& students, vector<Course*>& courses);
@@ -36,86 +35,77 @@ void studentLogin(const vector<Student*>& students);
 Course* findCourse(const vector<Course*>& courses, int courseId);
 
 
-// Course class declaration
-class Course
-{
-private:
-    int courseCode;
-    string courseName;
-    Teacher* teacher;
-    vector<Student*> studentsEnrolled;
 
-public:
-    Course();
-    Course(int ID, string name, Teacher* t);
 
-    void addStudent(Student* student);
-    void removeStudent(Student* student);
-    void viewStudents() const;
+int main() {
+    vector<Teacher*> teachers;
+    vector<Student*> students;
+    vector<Course*> courses;
 
-    void writeToFile(const string& filename) const;
-    void readFromFile(const string& filename, const vector<Student*>& allStudents) const; // Added const qualifier
+    // Load data from files
+    loadData(teachers, students, courses);
 
-    int getCourseCode() const;
-    string getCourseName() const;
-    Teacher* getTeacher() const;
-    vector<Student*> getStudentsEnrolled() const; // Added const qualifier
-    // Added const qualifier for displayTeacher method
-    void displayTeacher(const Teacher* cteacher) const;
-};
+    int choice;
+    do {
+        displayHeader("Login");
+        cout << "1. Admin" << endl;
+        cout << "2. Teacher" << endl;
+        cout << "3. Student" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Enter your choice: ";
+        while(true)
+        {
+            if(cin >> choice)
+            {
+                if(choice == 1)
+                {
+                    adminScreen(students, teachers, courses);
+                    break;
+                }
+                else if(choice == 2)
+                {
+                    teacherLogin(teachers);
+                    break;
+                }
+                else if(choice == 3)
+                {
+                    studentLogin(students);
+                    break;
+                }
+                else if(choice == 4)
+                {
+                    displayFooter();
+                    cout << "Exiting..." << endl;
+                    break;
+                }
+                else
+                {
+                    cout << "Invalid choice. Please enter a valid option." << endl;
+                    cout << "Enter your choice: ";
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+            }
+        }
+    } while (choice != 4);
+    // Save data to files before exiting
+    saveData(teachers, students, courses);
 
-// Teacher class declaration
-class Teacher
-{
-private:
-    string name;
-    string email;
-    int teacherID;
-    vector<Course*> coursestaught;
+    // Free memory
+    for (auto teacher : teachers) {
+        delete teacher;
+    }
 
-public:
-    Teacher() {}
-    Teacher(int id, string n, string mail);
+    for (auto student : students) {
+        delete student;
+    }
 
-    void assignCourse(Course* course);
-    void removeCourse(Course* course);
-    void viewCourses() const; // Added const qualifier
+    for (auto course : courses) {
+        delete course;
+    }
 
-    void writeToFile(const string& filename) const;
-    void readFromFile(const string& filename, const vector<Course*>& allCourses) const; // Added const qualifier
-
-    string getTeacherName() const;
-    string getTeacherEmail() const;
-    int getTeacherID() const;
-    vector<Course*> getCourse() const; // Added const qualifier
-};
-
-// Student class declaration
-class Student
-{
-private:
-    int studentID;
-    string name;
-    string email;
-    vector<Course*> coursesEnrolled;
-
-public:
-    Student() {}
-    Student(int id, string n, string mail);
-
-    void enrollCourse(Course* course);
-    void dropCourse(Course* course);
-    void viewCourses() const; // Added const qualifier
-
-    void writeToFile(const string& filename) const;
-    void readFromFile(const string& filename, const vector<Course*>& allCourses) const; // Added const qualifier
-
-    string getstudentName() const;
-    int getstudentID() const;
-    string getstudentEmail() const;
-
-    vector<Course*> getCourse() const; // Added const qualifier
-};
+    return 0;
+}
 
 // Implementations
 
@@ -171,6 +161,7 @@ void loadStudents(vector<Student*>& students, vector<Course*>& courses) {
 
     string line;
     while (getline(file, line)) {
+
         stringstream ss(line);
         string id, name, email;
         getline(ss, id, ',');
@@ -204,7 +195,7 @@ void saveCourses(const vector<Course*>& courses) {
         file << course->getCourseCode() << "," << course->getCourseName() << "," << course->getTeacher()->getTeacherID();
         const auto& students = course->getStudentsEnrolled();
         for (const auto& student : students) {
-            file << "," << student->getstudentID();
+            file << "," << student->getStudentID();
         }
         file << endl;
     }
@@ -276,7 +267,7 @@ void saveTeachers(const vector<Teacher*>& teachers) {
         file << teacher->getTeacherID() << "," << teacher->getTeacherName() << "," << teacher->getTeacherEmail();
 
         // Save the courses taught by this teacher
-        for (const auto& course : teacher->getCourse()) {
+        for (const auto& course : teacher->getCourses()) {
             file << "," << course->getCourseCode();
         }
 
@@ -293,10 +284,10 @@ void saveStudents(const vector<Student*>& students) {
     }
 
     for (const auto& student : students) {
-        file << student->getstudentID() << "," << student->getstudentName() << "," << student->getstudentEmail();
+        file << student->getStudentID() << "," << student->getStudentName() << "," << student->getStudentEmail();
 
         // Save the courses enrolled by this student
-        for (const auto& course : student->getCourse()) {
+        for (const auto& course : student->getCourses()) {
             file << "," << course->getCourseCode();
         }
 
@@ -316,7 +307,7 @@ Teacher* findTeacher(const vector<Teacher*>& teachers, const int& teacherID) {
 
 Student* findStudent(const vector<Student*>& students, const int& studentID) {
     for (const auto& student : students) {
-        if (student->getstudentID() == studentID) {
+        if (student->getStudentID() == studentID) {
             return student;
         }
     }
@@ -457,7 +448,7 @@ void enrollStudent(vector<Student*>& students, const vector<Course*>& courses) {
     }
 
     auto studentIt = find_if(students.begin(), students.end(), [studentID](const Student* s) {
-        return s->getstudentID() == studentID;
+        return s->getStudentID() == studentID;
     });
 
     if (studentIt != students.end()) {
@@ -586,218 +577,9 @@ void studentLogin(const vector<Student*>& students) {
     Student* student = findStudent(students, studentID);
     if (student != nullptr) {
         cout << "Login Successful!" << endl;
-        cout << "Welcome " << student->getstudentName() << "!" << endl;
+        cout << "Welcome " << student->getStudentName() << "!" << endl;
         student->viewCourses();
     } else {
         cout << "Login Failed! Student ID not found." << endl;
     }
-}
-
-// Course method implementations
-Course::Course() {}
-
-Course::Course(int ID, string name, Teacher* t) : courseCode(ID), courseName(name), teacher(t) {}
-
-void Course::addStudent(Student* student) {
-    studentsEnrolled.push_back(student);
-}
-
-void Course::removeStudent(Student* student) {
-    studentsEnrolled.erase(find(studentsEnrolled.begin(), studentsEnrolled.end(), student));
-}
-
-void Course::viewStudents() const {
-    cout << "Students Enrolled in the Course:" << endl;
-    int i = 1;
-    if(studentsEnrolled.empty()) {
-        cout << "There are no students enrolled in the course." << endl;
-    }
-    
-    for (const auto &student : studentsEnrolled)
-    {
-        cout << "Student #" << i << endl;
-        cout << "Student Name: " << student->getstudentName() << endl;
-        cout << "Student ID: " << student->getstudentID() << endl;
-        cout << "Student Email: " << student->getstudentEmail() << endl << endl;
-        i++;
-    }
-}
-
-int Course::getCourseCode() const {
-    return courseCode;
-}
-
-string Course::getCourseName() const {
-    return courseName;
-}
-
-Teacher* Course::getTeacher() const {
-    return teacher;
-}
-
-vector<Student*> Course::getStudentsEnrolled() const {
-    return studentsEnrolled;
-}
-
-void Course::displayTeacher(const Teacher* cteacher) const {
-    cout << "Teacher Name: " << cteacher->getTeacherName() << endl;
-    cout << "Teacher ID: " << cteacher->getTeacherID() << endl;
-    cout << "Teacher Email: " << cteacher->getTeacherEmail() << endl;
-}
-
-// Teacher method implementations
-Teacher::Teacher(int id, string n, string mail) : teacherID(id), name(n), email(mail) {}
-
-void Teacher::assignCourse(Course* course) {
-    coursestaught.push_back(course);
-}
-
-void Teacher::removeCourse(Course* course) {
-    coursestaught.erase(find(coursestaught.begin(), coursestaught.end(), course));
-}
-
-void Teacher::viewCourses() const {
-    cout << "\nCourses Assigned to the Teacher " << name << ";" << endl;
-    int i = 1;
-    if(coursestaught.empty()) {
-        cout << "There are no courses assigned to the teacher." << endl;
-    }
-    for (const auto &course : coursestaught)
-    {
-        cout << "Course #" << i << ":" << endl;
-        cout << "Course ID: " << course->getCourseCode() << endl;
-        cout << "Course Name: " << course->getCourseName() << endl;
-        course->viewStudents(); cout << "\n";
-        i++;
-
-    }
-}
-
-string Teacher::getTeacherName() const {
-    return name;
-}
-
-string Teacher::getTeacherEmail() const {
-    return email;
-}
-
-int Teacher::getTeacherID() const {
-    return teacherID;
-}
-
-vector<Course*> Teacher::getCourse() const {
-    return coursestaught;
-}
-
-// Student method implementations
-Student::Student(int id, string n, string mail) : studentID(id), name(n), email(mail) {}
-
-void Student::enrollCourse(Course* course) {
-    coursesEnrolled.push_back(course);
-}
-
-void Student::dropCourse(Course* course) {
-    coursesEnrolled.erase(find(coursesEnrolled.begin(), coursesEnrolled.end(), course));
-}
-
-void Student::viewCourses() const {
-    cout << "\nCourses Assigned to the Student " << name << ";" << endl;
-    int i = 1;
-    if(coursesEnrolled.empty()) {
-        cout << "There are no courses assigned to the student." << endl;
-    }
-    for (const auto &course : coursesEnrolled)
-    {
-        cout << "Course #" << i << ":" << endl;
-        cout << "Course ID: " << course->getCourseCode() << endl;
-        cout << "Course Name: " << course->getCourseName() << endl;
-        cout << "Course Teacher: "; course->displayTeacher(course->getTeacher()); cout << "\n";
-        i++;
-    }
-}
-
-string Student::getstudentName() const {
-    return name;
-}
-
-int Student::getstudentID() const {
-    return studentID;
-}
-
-string Student::getstudentEmail() const {
-    return email;
-}
-
-vector<Course*> Student::getCourse() const {
-    return coursesEnrolled;
-}
-
-int main() {
-    vector<Teacher*> teachers;
-    vector<Student*> students;
-    vector<Course*> courses;
-
-    // Load data from files
-    loadData(teachers, students, courses);
-
-    int choice;
-    do {
-        displayHeader("Login");
-        cout << "1. Admin" << endl;
-        cout << "2. Teacher" << endl;
-        cout << "3. Student" << endl;
-        cout << "4. Exit" << endl;
-        cout << "Enter your choice: ";
-        while(true)
-        {
-            if(cin >> choice)
-            {
-                if(choice == 1)
-                {
-                    adminScreen(students, teachers, courses);
-                    break;
-                }
-                else if(choice == 2)
-                {
-                    teacherLogin(teachers);
-                    break;
-                }
-                else if(choice == 3)
-                {
-                    studentLogin(students);
-                    break;
-                }
-                else if(choice == 4)
-                {
-                    displayFooter();
-                    cout << "Exiting..." << endl;
-                    break;
-                }
-                else
-                {
-                    cout << "Invalid choice. Please enter a valid option." << endl;
-                    cout << "Enter your choice: ";
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                }
-            }
-        }
-    } while (choice != 4);
-    // Save data to files before exiting
-    saveData(teachers, students, courses);
-
-    // Free memory
-    for (auto teacher : teachers) {
-        delete teacher;
-    }
-
-    for (auto student : students) {
-        delete student;
-    }
-
-    for (auto course : courses) {
-        delete course;
-    }
-
-    return 0;
 }

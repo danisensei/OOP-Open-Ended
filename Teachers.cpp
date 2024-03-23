@@ -1,91 +1,48 @@
+#include <iostream>
+#include <algorithm> 
 #include "Teachers.h"
+#include "Course.h"
 
-#include<iostream>
-#include<string>
-#include<vector>
-#include<fstream>
-#include<algorithm>
-#include"Course.h"
+using namespace std;
 
-Teacher::Teacher(string id, string n, string mail) : teacherID(id), name(n), email(mail) {}
+Teacher::Teacher(int id, std::string n, std::string mail) : teacherID(id), name(n), email(mail) {}
 
-void Teacher::assignCourse(Course course) {
-    coursestaught.push_back(course);
+void Teacher::assignCourse(Course* course) {
+    coursesTaught.push_back(course);
 }
 
-void Teacher::removeCourse(Course course) {
-    coursestaught.erase(find(coursestaught.begin(), coursestaught.end(), course));
+void Teacher::removeCourse(Course* course) {
+    coursesTaught.erase(std::find(coursesTaught.begin(), coursesTaught.end(), course));
 }
 
-void Teacher::viewCourses() {
+void Teacher::viewCourses() const {
     cout << "\nCourses Assigned to the Teacher " << name << ";" << endl;
     int i = 1;
-    for (const auto &course : coursestaught)
-    {
+    if(coursesTaught.empty()) {
+        cout << "There are no courses assigned to the teacher." << endl;
+    }
+    for (const auto &course : coursesTaught) {
         cout << "Course #" << i << ":" << endl;
-        cout << "Course ID: " << course.getCourseCode() << endl;
-        cout << "Course Name: " << course.getCourseName() << endl;
-        cout << "Course Enrolled Student: "; course.viewStudents(); cout << "\n";
+        cout << "Course ID: " << course->getCourseCode() << endl;
+        cout << "Course Name: " << course->getCourseName() << endl;
+        course->viewStudents();
+        cout << "\n";
         i++;
-
     }
 }
 
-void Teacher::writeToFile(const string& filename) const {
-    ofstream file(filename);
-    if (file.is_open()) {
-        file << teacherID << "," << name << "," << email << "\n";
-        for (const auto& course : coursestaught) {
-            file << course.getCourseCode() << "," << course.getCourseName() << "\n";
-        }
-        file.close();
-    } else {
-        cerr << "Error: Unable to open file for writing\n";
-    }
-}
-
-void Teacher::readFromFile(const string& filename, const vector<Course>& allCourses) {
-    ifstream file(filename);
-    if (file.is_open()) {
-        string line;
-        if (getline(file, line)) {
-            stringstream ss(line);
-            getline(ss, teacherID, ',');
-            getline(ss, name, ',');
-            getline(ss, email, ',');
-
-            while (getline(file, line)) {
-                stringstream ss(line);
-                string courseCode, courseName;
-                getline(ss, courseCode, ',');
-                getline(ss, courseName, ',');
-
-                auto it = find_if(allCourses.begin(), allCourses.end(), [courseCode](const Course& c) {
-                    return c.getCourseCode() == stoi(courseCode);
-                });
-                if (it != allCourses.end()) {
-                    coursestaught.push_back(*it);
-                }
-            }
-        }
-        file.close();
-    } else {
-        cerr << "Error: Unable to open file for reading\n";
-    }
-}
-
-string Teacher::getTeacherName() const {
+std::string Teacher::getTeacherName() const {
     return name;
 }
 
-string Teacher::getTeacherEmail() const {
+std::string Teacher::getTeacherEmail() const {
     return email;
 }
 
-string Teacher::getTeacherID() const {
+int Teacher::getTeacherID() const {
     return teacherID;
 }
 
-vector<Course> Teacher::getCourse() {
-    return coursestaught;
+std::vector<Course*> Teacher::getCourses() const {
+    return coursesTaught;
 }

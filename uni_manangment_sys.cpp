@@ -11,7 +11,6 @@
 
 using namespace std;
 
-
 // Function declarations
 void loadData(vector<Teacher*>& teachers, vector<Student*>& students, vector<Course*>& courses);
 void saveData(const vector<Teacher*>& teachers, const vector<Student*>& students, const vector<Course*>& courses);
@@ -25,7 +24,7 @@ Teacher* findTeacher(const vector<Teacher*>& teachers, const int& teacherID);
 Student* findStudent(const vector<Student*>& students, const int& studentID);
 void displayHeader(const string& title);
 void displayFooter();
-void addTeacher(vector<Teacher*>& teachers);
+void addTeacher(vector<Teacher*>& teachers, vector<Course*>& courses);
 void addStudent(vector<Student*>& students);
 void addCourse(vector<Course*>& courses, const vector<Teacher*>& teachers);
 void enrollStudent(vector<Student*>& students, const vector<Course*>& courses);
@@ -33,9 +32,6 @@ void adminScreen(vector<Student*>& students,vector<Teacher*>& teachers, vector<C
 void teacherLogin(const vector<Teacher*>& teachers);
 void studentLogin(const vector<Student*>& students);
 Course* findCourse(const vector<Course*>& courses, int courseId);
-
-
-
 
 int main() {
     vector<Teacher*> teachers;
@@ -185,7 +181,7 @@ void loadStudents(vector<Student*>& students, vector<Course*>& courses) {
 }
 
 void saveCourses(const vector<Course*>& courses) {
-    ofstream file("courses.txt", ios::app);
+    ofstream file("courses.txt", ios::trunc); // Truncate the file to clear previous data
     if (!file.is_open()) {
         cerr << "Error: Unable to open courses file for writing." << endl;
         return;
@@ -193,10 +189,13 @@ void saveCourses(const vector<Course*>& courses) {
 
     for (const auto& course : courses) {
         file << course->getCourseCode() << "," << course->getCourseName() << "," << course->getTeacher()->getTeacherID();
+
+        // Save the students enrolled in this course
         const auto& students = course->getStudentsEnrolled();
         for (const auto& student : students) {
             file << "," << student->getStudentID();
         }
+
         file << endl;
     }
     file.close();
@@ -245,7 +244,6 @@ void loadCourses(vector<Course*>& courses, const vector<Teacher*>& teachers, con
     file.close();
 }
 
-
 Course* findCourse(const vector<Course*>& courses, int courseId) {
     for (const auto& course : courses) {
         if (course->getCourseCode() == courseId) {
@@ -255,9 +253,8 @@ Course* findCourse(const vector<Course*>& courses, int courseId) {
     return nullptr;
 }
 
-
 void saveTeachers(const vector<Teacher*>& teachers) {
-    ofstream file("teachers.txt");
+    ofstream file("teachers.txt", ios::trunc); // Truncate the file to clear previous data
     if (!file.is_open()) {
         cerr << "Error: Unable to open teachers file for writing." << endl;
         return;
@@ -277,7 +274,7 @@ void saveTeachers(const vector<Teacher*>& teachers) {
 }
 
 void saveStudents(const vector<Student*>& students) {
-    ofstream file("students.txt");
+    ofstream file("students.txt", ios::trunc); // Truncate the file to clear previous data
     if (!file.is_open()) {
         cerr << "Error: Unable to open students file for writing." << endl;
         return;
@@ -314,7 +311,6 @@ Student* findStudent(const vector<Student*>& students, const int& studentID) {
     return nullptr;
 }
 
-// Function definitions
 void displayHeader(const string& title) {
     cout << "----------------------------------------------" << endl;
     cout << "           UNIVERSITY MANAGEMENT SYSTEM       " << endl;
@@ -329,7 +325,7 @@ void displayFooter() {
     cout << "----------------------------------------------" << endl;
 }
 
-void addTeacher(vector<Teacher*>& teachers) {
+void addTeacher(vector<Teacher*>& teachers, vector<Course*>& courses) {
     int id;
     string name, email;
     cout << "Enter Teacher ID: ";
@@ -458,7 +454,7 @@ void enrollStudent(vector<Student*>& students, const vector<Course*>& courses) {
 
         if (courseIt != courses.end()) {
             (*studentIt)->enrollCourse(*courseIt);
-            cout << "Student enrolled in the course successfully!" << endl;
+            cout << "Student enrolled in the course successfully" << endl;
         } else {
             cout << "Course with code " << courseCode << " not found. Enrollment failed." << endl;
         }
@@ -484,7 +480,7 @@ void adminScreen(vector<Student*>& students,vector<Teacher*>& teachers, vector<C
             {
                 if(choice == 1)
                 {
-                    addTeacher(teachers);
+                    addTeacher(teachers, courses);
                     break;
                 }
                 else if(choice == 2)

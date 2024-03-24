@@ -181,7 +181,7 @@ void loadStudents(vector<Student*>& students, vector<Course*>& courses) {
 }
 
 void saveCourses(const vector<Course*>& courses) {
-    ofstream file("courses.txt", ios::trunc); // Truncate the file to clear previous data
+    ofstream file("courses.txt", ios::app);
     if (!file.is_open()) {
         cerr << "Error: Unable to open courses file for writing." << endl;
         return;
@@ -211,13 +211,17 @@ void loadCourses(vector<Course*>& courses, const vector<Teacher*>& teachers, con
     string line;
     while (getline(file, line)) {
         stringstream ss(line);
-        int code;
+        string code_str;
         string name;
-        int teacherID;
-        ss >> code;
+        string teacherID_str; // Changed to string
+
+        getline(ss, code_str, ',');
         getline(ss, name, ',');
-        string id = to_string(teacherID);
-        getline(ss, id, ',');
+        getline(ss, teacherID_str, ','); // Read as string
+
+        int teacherID;
+        teacherID = stoi(teacherID_str); // Convert to integer
+        
 
         Teacher* teacher = nullptr;
         for (const auto& t : teachers) {
@@ -227,11 +231,11 @@ void loadCourses(vector<Course*>& courses, const vector<Teacher*>& teachers, con
             }
         }
         if (teacher == nullptr) {
-            cerr << "Error: Teacher with ID " << teacherID << " not found for course " << code << endl;
+            cerr << "Error: Teacher with ID " << teacherID << " not found for course " << code_str << endl;
             continue;
         }
 
-        Course* course = new Course(code, name, teacher);
+        Course* course = new Course(stoi(code_str), name, teacher);
 
         while (getline(ss, line, ',')) {
             Student* student = findStudent(students, stoi(line));

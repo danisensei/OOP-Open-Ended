@@ -1,2 +1,2 @@
-111,Science,101
-112,English,102
+111,Science,101,1,2,6
+112,English,102,3,4,5

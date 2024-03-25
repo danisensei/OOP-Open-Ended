@@ -132,18 +132,21 @@ void loadTeachers(vector<Teacher*>& teachers, vector<Course*>& courses) {
         getline(ss, name, ',');
         getline(ss, email, ',');
 
-        Teacher* teacher = new Teacher(stoi(id), name, email);
+        if(!(id == "")) {
+            int id_teacher = stoi(id);
+            Teacher* teacher = new Teacher(id_teacher, name, email);
         
-        // Load the courses taught by this teacher
-        string courseId;
-        while (getline(ss, courseId, ',')) {
-            Course* course = findCourse(courses, stoi(courseId));
-            if (course != nullptr) {
-                teacher->assignCourse(course);
+            // Load the courses taught by this teacher
+            string courseId;
+            while (getline(ss, courseId, ',')) {
+                Course* course = findCourse(courses, stoi(courseId));
+                if (course != nullptr) {
+                    teacher->assignCourse(course);
+                }
             }
-        }
 
-        teachers.push_back(teacher);
+            teachers.push_back(teacher);
+        }
     }
     file.close();
 }
@@ -164,24 +167,28 @@ void loadStudents(vector<Student*>& students, vector<Course*>& courses) {
         getline(ss, name, ',');
         getline(ss, email, ',');
 
-        Student* student = new Student(stoi(id), name, email);
-        
-        // Load the courses enrolled by this student
-        string courseId;
-        while (getline(ss, courseId, ',')) {
-            Course* course = findCourse(courses, stoi(courseId));
-            if (course != nullptr) {
-                student->enrollCourse(course);
+        if (!(id == "")){
+            
+            Student* student = new Student(stoi(id), name, email);
+            
+            // Load the courses enrolled by this student
+            string courseId;
+            while (getline(ss, courseId, ',')) {
+                Course* course = findCourse(courses, stoi(courseId));
+                if (course != nullptr) {
+                    student->enrollCourse(course);
+                }
             }
-        }
 
-        students.push_back(student);
+            students.push_back(student);
+
+        }
     }
     file.close();
 }
 
 void saveCourses(const vector<Course*>& courses) {
-    ofstream file("courses.txt", ios::app);
+    ofstream file("courses.txt");
     if (!file.is_open()) {
         cerr << "Error: Unable to open courses file for writing." << endl;
         return;
@@ -213,23 +220,15 @@ void loadCourses(vector<Course*>& courses, const vector<Teacher*>& teachers, con
         stringstream ss(line);
         string code_str;
         string name;
-        string teacherID_str; // Changed to string
+        string teacherID_str;
 
         getline(ss, code_str, ',');
         getline(ss, name, ',');
-        getline(ss, teacherID_str, ','); // Read as string
+        getline(ss, teacherID_str, ',');
 
-        int teacherID;
-        teacherID = stoi(teacherID_str); // Convert to integer
-        
+        int teacherID = stoi(teacherID_str);
 
-        Teacher* teacher = nullptr;
-        for (const auto& t : teachers) {
-            if (t->getTeacherID() == teacherID) {
-                teacher = t;
-                break;
-            }
-        }
+        Teacher* teacher = findTeacher(teachers, teacherID);
         if (teacher == nullptr) {
             cerr << "Error: Teacher with ID " << teacherID << " not found for course " << code_str << endl;
             continue;
@@ -237,12 +236,15 @@ void loadCourses(vector<Course*>& courses, const vector<Teacher*>& teachers, con
 
         Course* course = new Course(stoi(code_str), name, teacher);
 
-        while (getline(ss, line, ',')) {
-            Student* student = findStudent(students, stoi(line));
+        string studentID_str;
+        while (getline(ss, studentID_str, ',')) {
+            int studentID = stoi(studentID_str);
+            Student* student = findStudent(students, studentID);
             if (student != nullptr) {
                 course->addStudent(student);
             }
         }
+
         courses.push_back(course);
     }
     file.close();
